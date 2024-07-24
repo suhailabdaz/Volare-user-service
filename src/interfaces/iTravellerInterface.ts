@@ -1,6 +1,6 @@
-import { User } from "../model/user.entities";
+import { Traveller } from "../model/travellers.entities";
 
-export interface IUserService {
+export interface ITravellerService {
   userRegister(userData: {
     name: string;
     email: string;
@@ -23,8 +23,5 @@ export interface IUserService {
   getUser(id:string):any
   updateUser(data:{}):any
   resetPassword(data:{}):any
-  addTraveller(travellerData:any):any
-  getTravellers(id:string):any
-  saveTravellers(travellerData:any):any
-  deleteTraveller(id:string):any
+  addTraveller(data:{}):any
 }

@@ -10,7 +10,13 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password?: string;
-  isVerified: boolean;
+  status: boolean;
+  role:string;
+  gender?:string;
+  address?:string;
+  pincode?:string;
+  state?:string;
+  birthday?:Date;
   comparePassword: (password: string) => Promise<boolean>;
   SignAccessToken: () => string;
   SignRefreshToken: () => string;
@@ -20,9 +26,23 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Please enter your first name"],
     },
-
+    gender: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    pincode: {
+      type: Number,
+    },
+  address: {
+      type: String,
+    },
+    birthday: {
+      type: Date,
+    },
+    
     email: {
       type: String,
       required: [true, "Please enter your email"],
@@ -38,9 +58,9 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     password: {
       type: String,
     },
-    isVerified: {
+    status: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
@@ -60,8 +80,8 @@ userSchema.pre<IUser>("save", async function (next) {
 // sign access token
 userSchema.methods.SignAccessToken = function () {
   return jwt.sign(
-    { id: this._id, role: this.role },
-    process.env.ACCESS_TOKEN || "",
+    { id: this._id, role: this.role ||"user" },
+    process.env.ACCESS_TOKEN || "suhail",
     {
       expiresIn: "5m",
     }
@@ -71,8 +91,8 @@ userSchema.methods.SignAccessToken = function () {
 // sign refresh token
 userSchema.methods.SignRefreshToken = function () {
   return jwt.sign(
-    { id: this._id, role: this.role },
-    process.env.REFRESH_TOKEN || "",
+    { id: this._id, role: this.role || "user" },
+    process.env.REFRESH_TOKEN || "suhail",
     {
       expiresIn: "3d",
     }
@@ -84,5 +104,5 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const UserModel: Model<IUser> = mongoose.model("User", userSchema);
+const UserModel: Model<IUser> = mongoose.model("users", userSchema);
 export default UserModel;

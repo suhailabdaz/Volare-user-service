@@ -1,65 +1,26 @@
-import { IUserRepository } from "../interfaces/iUserRepository";
-import UserModel, { IUser } from "../model/schemas/user.schema";
-import { User } from "../model/user.entities";
+import { IUserRepository } from '../interfaces/iUserRepository';
+import UserModel, { IUser } from '../model/schemas/user.schema';
+import TravellerModel, { ITraveller } from '../model/schemas/travellers.schema';
+import { User } from '../model/user.entities';
+import { Traveller } from '../model/travellers.entities';
 
 export class UserRepository implements IUserRepository {
-
-  async getUserAnalytics(instructorId: string): Promise<Object[] | null> {
-    try {
-      const twelveMonthsAgo = new Date();
-      twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
-
-      const matchStage: any = {
-        $match: {
-          createdAt: { $gte: twelveMonthsAgo },
-        },
-      };
-      if (instructorId !== "admin") {
-        matchStage.$match.instructorId = instructorId;
-      }
-
-      const response = await UserModel.aggregate([
-        matchStage,
-        {
-          $group: {
-            _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
-            count: { $sum: 1 },
-          },
-        },
-      ]);
-
-      return response || [];
-    } catch (e: any) {
-      throw new Error("db error");
-    }
-  }
-
-
   async deleteUser(userId: string): Promise<Object> {
     try {
       await UserModel.findByIdAndDelete(userId);
       return { success: true };
     } catch (e: any) {
-      throw new Error("db error");
-    }
-  }
-
-  getInstructors() {
-    try {
-      const instructors = UserModel.find({ role: "instructor" });
-      return instructors;
-    } catch (e: any) {
-      throw new Error("db error");
+      throw new Error('db error');
     }
   }
 
   async getUsers() {
     try {
       // const users = UserModel.find({ role: "user" });
-      const users = "ha  mone kitti"
-      return {data:users};
+      const users = 'ha  mone kitti';
+      return { data: users };
     } catch (e: any) {
-      throw new Error("db error");
+      throw new Error('db error');
     }
   }
 
@@ -67,7 +28,7 @@ export class UserRepository implements IUserRepository {
     try {
       return UserModel.findByIdAndUpdate(id, { password });
     } catch (e: any) {
-      throw new Error("db error");
+      throw new Error('db error');
     }
   }
 
@@ -75,16 +36,19 @@ export class UserRepository implements IUserRepository {
     try {
       return UserModel.findByIdAndUpdate(id, { avatar });
     } catch (e: any) {
-      throw new Error("db error");
+      throw new Error('db error');
     }
   }
 
-  async findByIdAndUpdate(id: string, name: string): Promise<IUser | null> {
+  async findByIdAndUpdate(id: string, values: any): Promise<IUser | null> {
     try {
-      const user = await UserModel.findByIdAndUpdate(id, { name: name });
+      const user = await UserModel.findByIdAndUpdate(id, values, {
+        new: true,
+        runValidators: true,
+      });
       return user;
     } catch (e: any) {
-      throw new Error("db error");
+      throw new Error('db error');
     }
   }
 
@@ -93,7 +57,7 @@ export class UserRepository implements IUserRepository {
       const user = await UserModel.findById(id);
       return user;
     } catch (e: any) {
-      throw new Error("db error");
+      throw new Error('db error');
     }
   }
 
@@ -101,7 +65,7 @@ export class UserRepository implements IUserRepository {
     try {
       return UserModel.create(userData);
     } catch (e: any) {
-      throw new Error("db error");
+      throw new Error('db error');
     }
   }
 
@@ -110,7 +74,46 @@ export class UserRepository implements IUserRepository {
       const user = await UserModel.findOne({ email });
       return user;
     } catch (e: any) {
-      throw new Error("db error");
+      throw new Error('db error');
+    }
+  }
+
+  async addTraveller(travellerData: Traveller): Promise<ITraveller | null> {
+    try {
+      const traveller = await TravellerModel.create(travellerData);
+      return traveller;
+    } catch (e: any) {
+      throw new Error('db error');
+    }
+  }
+  async getTravellers(id: string) {
+    try {
+      const travellers = await TravellerModel.find({ userId: id });
+      return travellers;
+    } catch (e: any) {
+      throw new Error('db error');
+    }
+  }
+  async TravellerfindByIdAndUpdate(
+    id: string,
+    values: any
+  ): Promise<ITraveller | null> {
+    try {
+      const Traveller = await TravellerModel.findByIdAndUpdate(id, values, {
+        new: true,
+        runValidators: true,
+      });
+      return Traveller;
+    } catch (e: any) {
+      throw new Error('db error');
+    }
+  }
+  async deleteTraveller(id: string) {
+    try {
+      const Traveller = await TravellerModel.deleteOne({ _id: id });
+      return Traveller;
+    } catch (e: any) {
+      throw new Error('db error');
     }
   }
 }

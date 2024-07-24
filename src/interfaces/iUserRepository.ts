@@ -1,15 +1,17 @@
 import { IUser } from "../model/schemas/user.schema";
 import { User } from "../model/user.entities";
+import { ITraveller } from "../model/schemas/travellers.schema";
+import { Traveller } from "../model/travellers.entities";
 
 export interface IUserRepository {
-  getUserAnalytics(instructorId: string): Promise<Object[] | null>;
   register(userData: User): Promise<IUser | null>;
   findOne(email: string): Promise<IUser | null>;
   findById(id: string): Promise<IUser | null>;
-  findByIdAndUpdate(id: string, name: string): Promise<IUser | null>;
-  avatarUpdate(id: string, avatar: string): Promise<IUser | null>;
-  updatePassword(id: string, password: string): Promise<IUser | null>;
+  findByIdAndUpdate(id: string, values: string): Promise<IUser | null>;
   getUsers(): any;
-  getInstructors():any;
-  deleteUser(userId:string): Promise<Object>;
+  updatePassword(id: string, password: string): Promise<IUser | null>;
+  addTraveller(travellerData:Traveller): Promise<ITraveller | null>;
+  getTravellers(id:string):any
+  TravellerfindByIdAndUpdate(id: string, values: string): Promise<ITraveller | null>;
+  deleteTraveller(id: string): any
 }
