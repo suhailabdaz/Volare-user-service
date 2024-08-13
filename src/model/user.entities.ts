@@ -9,6 +9,8 @@ export class User {
     public readonly gender?:String,
     public readonly address?:string,
     public readonly state?:String,
-    public readonly pincode?:Number
+    public readonly pincode?:Number,
+    public readonly image_link?:String,
+
   ) {}
 }

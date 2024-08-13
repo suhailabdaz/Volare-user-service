@@ -94,6 +94,15 @@ export class UserController {
       console.error(e);
     }
   };
+
+  uploadImage = async (data:{user_id:string,imageName:string} ) => {
+    try {
+      const response = await this.service.uploadImage(data);
+      return response;
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
   addTraveller = async (travellerData: any) => {
     try {
       const response = await this.service.addTraveller(travellerData);
@@ -128,4 +137,15 @@ export class UserController {
       console.error(e);
     }
   };
+
+  getUsers = async () => {
+    try {
+      const response = await this.service.getUsers();
+      return response;
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
+
+  
 }

@@ -1,12 +1,12 @@
-import { OAuth2Client } from "google-auth-library";
-import { UserController } from "../controller/userController";
-import { UserRepository } from "../repository/userRepository";
-import { UserService } from "../services/user.service";
-import rabbitClient from "./client";
+import { OAuth2Client } from 'google-auth-library';
+import { UserController } from '../controller/userController';
+import { UserRepository } from '../repository/userRepository';
+import { UserService } from '../services/user.service';
+import rabbitClient from './client';
 
-const userRepository = new UserRepository()
-const service = new UserService(userRepository)
-const controller = new UserController(service)
+const userRepository = new UserRepository();
+const service = new UserService(userRepository);
+const controller = new UserController(service);
 
 export default class MessageHandler {
   static async handle(
@@ -16,53 +16,59 @@ export default class MessageHandler {
     replyTo: string
   ) {
     let response = data;
-    console.log("The operation in user service is", operation, data);
+    console.log('The operation in user service is', operation, data);
 
     switch (operation) {
-      case "login":
+      case 'login':
         response = await controller.userLogin.bind(controller)(data);
         break;
-      case "register":
-        response = await controller. userCreate.bind(controller)(data);
+      case 'register':
+        response = await controller.userCreate.bind(controller)(data);
         break;
-      case "verify-otp":
-        response = await controller. verify_otp.bind(controller)(data);
-        break ; 
-      case "resend-otp":
-        response = await controller. resend_otp.bind(controller)(data);
+      case 'verify-otp':
+        response = await controller.verify_otp.bind(controller)(data);
         break;
-      case "google-login":
-        response =  await controller .loginwithgoogle.bind(controller)(data);
+      case 'resend-otp':
+        response = await controller.resend_otp.bind(controller)(data);
         break;
-      case "check-account":
-        response = await controller.check_account.bind(controller)(data)
+      case 'google-login':
+        response = await controller.loginwithgoogle.bind(controller)(data);
         break;
-      case "update-password":
-        response = await controller.update_password.bind(controller)(data)
+      case 'check-account':
+        response = await controller.check_account.bind(controller)(data);
         break;
-      case "get-user":
-        response =  await controller.getUser.bind(controller)(data)
+      case 'update-password':
+        response = await controller.update_password.bind(controller)(data);
+        break;
+      case 'get-user':
+        response = await controller.getUser.bind(controller)(data);
         break;
       case 'update-user':
-        response = await controller.updateUser.bind(controller)(data)
+        response = await controller.updateUser.bind(controller)(data);
         break;
       case 'reset-password':
-        response = await controller.resetPassword.bind(controller)(data)
+        response = await controller.resetPassword.bind(controller)(data);
         break;
       case 'add-traveller':
-        response = await controller.addTraveller.bind(controller)(data)
+        response = await controller.addTraveller.bind(controller)(data);
         break;
       case 'get-travellers':
-        response = await controller.getTravellers.bind(controller)(data)
+        response = await controller.getTravellers.bind(controller)(data);
         break;
       case 'save-travellers':
-        response = await controller.saveTravellers.bind(controller)(data)
+        response = await controller.saveTravellers.bind(controller)(data);
         break;
-        case 'delete-traveller':
-        response = await controller.deleteTraveller.bind(controller)(data)
-         break;
+      case 'delete-traveller':
+        response = await controller.deleteTraveller.bind(controller)(data);
+        break;
+      case 'get-users':
+        response = await controller.getUsers.bind(controller)();
+        break;
+      case 'upload-image':
+        response = await controller.uploadImage.bind(controller)(data);
+        break;
       default:
-        response = "Request-key notfound";
+        response = 'Request-key notfound';
         break;
     }
     //Produce the response back to the client

@@ -14,7 +14,7 @@ export class UserService implements IUserService {
 
   constructor(repository: IUserRepository) {
     this.repository = repository;
-    this.client = new OAuth2Client(process.env.client_id);
+    this.client = new OAuth2Client(process.env.CLIENT_ID);
   }
 
   // helper function send otp if user is new
@@ -108,7 +108,7 @@ export class UserService implements IUserService {
     try {
       const ticket = await this.client.verifyIdToken({
         idToken: credential.credential,
-        audience: process.env.client_id,
+        audience: process.env.CLIENT_ID,
       });
 
       const payload = ticket.getPayload();
@@ -203,6 +203,21 @@ export class UserService implements IUserService {
     }
   }
 
+  async getUsers() {
+    try {
+      const users = await this.repository.getUsers();
+      return { success: true, users: users };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error resending OTP: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+
+
+
   async updateUser(data: { values: any; id: string }) {
     try {
       const user = await this.repository.findByIdAndUpdate(
@@ -248,7 +263,6 @@ export class UserService implements IUserService {
 
   async addTraveller(travellerData: any) {
     try {
-      console.log(travellerData);
       const traveller = await this.repository.addTraveller(travellerData);
       return { success: true, traveller: traveller };
     } catch (error) {
@@ -291,6 +305,20 @@ export class UserService implements IUserService {
     try {
       const traveller = await this.repository.deleteTraveller(id);
       return { success: true, traveller: id };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error resending OTP: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async uploadImage(data:{user_id:string,imageName:string}) {
+    try {
+      const userId = data.user_id;
+      const image_link = data.imageName
+      const imageLink = await this.repository.uploadImage(userId,image_link);
+      return { success: true, image_link:image_link };
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(`Error resending OTP: ${error.message}`);

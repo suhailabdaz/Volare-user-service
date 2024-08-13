@@ -17,6 +17,7 @@ export interface IUser extends Document {
   pincode?:string;
   state?:string;
   birthday?:Date;
+  image_link?:string;
   comparePassword: (password: string) => Promise<boolean>;
   SignAccessToken: () => string;
   SignRefreshToken: () => string;
@@ -41,6 +42,9 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     },
     birthday: {
       type: Date,
+    },
+    image_link: {
+      type: String,
     },
     
     email: {
@@ -80,7 +84,7 @@ userSchema.pre<IUser>("save", async function (next) {
 // sign access token
 userSchema.methods.SignAccessToken = function () {
   return jwt.sign(
-    { id: this._id, role: this.role ||"user" },
+    { id: this._id, role: this.role || "user" },
     process.env.ACCESS_TOKEN || "suhail",
     {
       expiresIn: "5m",

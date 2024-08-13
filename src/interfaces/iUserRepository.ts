@@ -14,4 +14,5 @@ export interface IUserRepository {
   getTravellers(id:string):any
   TravellerfindByIdAndUpdate(id: string, values: string): Promise<ITraveller | null>;
   deleteTraveller(id: string): any
+  uploadImage(userId:string,image_link:string):any
 }

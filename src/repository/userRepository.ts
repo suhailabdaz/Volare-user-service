@@ -16,9 +16,8 @@ export class UserRepository implements IUserRepository {
 
   async getUsers() {
     try {
-      // const users = UserModel.find({ role: "user" });
-      const users = 'ha  mone kitti';
-      return { data: users };
+      const users = UserModel.find();
+      return users;
     } catch (e: any) {
       throw new Error('db error');
     }
@@ -32,13 +31,6 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  avatarUpdate(id: string, avatar: string): Promise<IUser | null> {
-    try {
-      return UserModel.findByIdAndUpdate(id, { avatar });
-    } catch (e: any) {
-      throw new Error('db error');
-    }
-  }
 
   async findByIdAndUpdate(id: string, values: any): Promise<IUser | null> {
     try {
@@ -51,6 +43,19 @@ export class UserRepository implements IUserRepository {
       throw new Error('db error');
     }
   }
+
+  async  uploadImage(userId: string,image_link:string) {
+      try{
+        const user = await UserModel.findByIdAndUpdate(userId ,{
+          image_link
+        });
+        return user;
+      }catch (e: any) {
+      throw new Error('db error');
+    }
+  }
+
+ 
 
   async findById(id: string): Promise<IUser | null> {
     try {

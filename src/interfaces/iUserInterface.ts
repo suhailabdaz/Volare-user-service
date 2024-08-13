@@ -27,4 +27,6 @@ export interface IUserService {
   getTravellers(id:string):any
   saveTravellers(travellerData:any):any
   deleteTraveller(id:string):any
+  getUsers():any
+  uploadImage(data:{user_id:string,imageName:string}):any
 }
