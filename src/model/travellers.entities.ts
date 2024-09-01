@@ -12,6 +12,5 @@ export class Traveller {
     public readonly phone?: string,
     public readonly _id?: string,
     public readonly gender?: string,
- 
   ) {}
 }
