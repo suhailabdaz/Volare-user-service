@@ -67,6 +67,12 @@ export default class MessageHandler {
       case 'upload-image':
         response = await controller.uploadImage.bind(controller)(data);
         break;
+      case 'get-used-coupons':
+        response = await controller.getUsedCoupons.bind(controller)(data);
+        break;
+        case 'apply-coupon-user':
+        response = await controller.applyCoupon.bind(controller)(data);
+        break;
       default:
         response = 'Request-key notfound';
         break;

@@ -3,6 +3,8 @@ import UserModel, { IUser } from '../model/schemas/user.schema';
 import TravellerModel, { ITraveller } from '../model/schemas/travellers.schema';
 import { User } from '../model/user.entities';
 import { Traveller } from '../model/travellers.entities';
+import { Coupon } from '../model/coupon.entities';
+import mongoose from 'mongoose';
 
 export class UserRepository implements IUserRepository {
   async deleteUser(userId: string): Promise<Object> {
@@ -31,7 +33,6 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-
   async findByIdAndUpdate(id: string, values: any): Promise<IUser | null> {
     try {
       const user = await UserModel.findByIdAndUpdate(id, values, {
@@ -44,18 +45,16 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async  uploadImage(userId: string,image_link:string) {
-      try{
-        const user = await UserModel.findByIdAndUpdate(userId ,{
-          image_link
-        });
-        return user;
-      }catch (e: any) {
+  async uploadImage(userId: string, image_link: string) {
+    try {
+      const user = await UserModel.findByIdAndUpdate(userId, {
+        image_link,
+      });
+      return user;
+    } catch (e: any) {
       throw new Error('db error');
     }
   }
-
- 
 
   async findById(id: string): Promise<IUser | null> {
     try {
@@ -119,6 +118,26 @@ export class UserRepository implements IUserRepository {
       return Traveller;
     } catch (e: any) {
       throw new Error('db error');
+    }
+  }
+  async applyCoupon(userId: string, coupon: Coupon): Promise<IUser | null> {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const user = await UserModel.findById(userId).session(session);
+      if (user) {
+        user.usedCoupons.push(coupon.coupon_code);
+        await user.save({ session });
+      }
+      await session.commitTransaction();
+
+      return user;
+    } catch (e: any) {
+      await session.abortTransaction();
+      console.error('Error applying coupon to user', e);
+      throw e;
+    } finally {
+      session.endSession();
     }
   }
 }

@@ -3,12 +3,23 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { User } from "../user.entities";
+import transactionSchema from "./transaction.schema";
 
 const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export interface ITransaction {
+  amount: number;
+  date: Date;
+  description: string;
+  type: "credit" | "debit";
+}
+
 
 export interface IUser extends Document {
   name: string;
   email: string;
+  wallet:number;
+  transactions: ITransaction[];
   password?: string;
   status: boolean;
   role:string;
@@ -18,6 +29,7 @@ export interface IUser extends Document {
   state?:string;
   birthday?:Date;
   image_link?:string;
+  usedCoupons:string[];
   comparePassword: (password: string) => Promise<boolean>;
   SignAccessToken: () => string;
   SignRefreshToken: () => string;
@@ -37,7 +49,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     pincode: {
       type: Number,
     },
-  address: {
+    address: {
       type: String,
     },
     birthday: {
@@ -45,6 +57,10 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     },
     image_link: {
       type: String,
+    },
+    usedCoupons: {
+      type: [String], 
+      default: [],
     },
     
     email: {
@@ -65,6 +81,14 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     status: {
       type: Boolean,
       default: true,
+    },
+    wallet:{
+      type:Number,
+      default:0,
+    },
+    transactions: {
+      type: [transactionSchema], // Embed the transactions schema as an array
+      default: [],
     },
   },
   {

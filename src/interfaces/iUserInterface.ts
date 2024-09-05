@@ -1,3 +1,4 @@
+import { Coupon } from "../model/coupon.entities";
 import { User } from "../model/user.entities";
 
 export interface IUserService {
@@ -29,4 +30,6 @@ export interface IUserService {
   deleteTraveller(id:string):any
   getUsers():any
   uploadImage(data:{user_id:string,imageName:string}):any
+  getUsedCoupons(userId:string):any
+  applyCoupon(data:{userId:string,coupon:Coupon}):any
 }

@@ -7,6 +7,8 @@ import { generateOtp } from '../utils/generateOtp';
 import { sendOtpEmail } from '../utils/emailOtp';
 import { OAuth2Client } from 'google-auth-library';
 import { MongoError } from 'mongodb';
+import { IUser } from '../model/schemas/user.schema';
+import { Coupon } from '../model/coupon.entities';
 
 export class UserService implements IUserService {
   private repository: IUserRepository;
@@ -325,5 +327,34 @@ export class UserService implements IUserService {
       }
       throw error;
     }
+  }
+  async getUsedCoupons(userId: string) {
+      try{
+        const user = await this.repository.findById(userId)
+
+        if(!user){
+          throw new Error 
+        }
+        const usedCoupons = user.usedCoupons;
+
+        return usedCoupons  
+          }catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error resending OTP: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async applyCoupon(data:{userId: string, coupon: Coupon}) {
+      try{
+          const user = await this.repository.applyCoupon(data.userId,data.coupon)
+          return user
+      }catch (error) {
+        if (error instanceof Error) {
+          throw new Error(`Error resending OTP: ${error.message}`);
+        }
+        throw error;
+      }
   }
 }

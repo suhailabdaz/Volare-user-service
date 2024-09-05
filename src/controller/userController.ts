@@ -1,4 +1,5 @@
 import { IUserService } from '../interfaces/iUserInterface';
+import { Coupon } from '../model/coupon.entities';
 
 export class UserController {
   private service: IUserService;
@@ -19,6 +20,24 @@ export class UserController {
   userCreate = async (data: any) => {
     try {
       const response = await this.service.userCreate(data);
+      return response;
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  getUsedCoupons = async (userId:string) => {
+    try {
+      const response = await this.service.getUsedCoupons(userId);
+      return response;
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  applyCoupon = async (data:{userId:string,coupon:Coupon}) => {
+    try {
+      const response = await this.service.applyCoupon(data);
       return response;
     } catch (e: any) {
       console.log(e);

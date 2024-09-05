@@ -11,6 +11,7 @@ export class User {
     public readonly state?:String,
     public readonly pincode?:Number,
     public readonly image_link?:String,
-
+    public readonly usedCoupons?:string[]
+    
   ) {}
 }
